@@ -6,6 +6,12 @@ def create_matrix(width, height):
 
 
 def basic_info():
+    '''obtains basic info:
+    - window size
+    - how big each tile is 
+    - matrix creation
+    - where mario starts
+    '''
     display_size = [1000,1000]
 
     #matrix/grid creation
@@ -16,6 +22,6 @@ def basic_info():
     matrix = create_matrix(width=horizontal_tile_len,height=vertical_tile_len)
 
     #pixel position on the window
-    ant_position = [int(horizontal_tile_len/2)*tile_size, int(vertical_tile_len/2)*tile_size]
+    mario_position = [int(horizontal_tile_len/2)*tile_size, int(vertical_tile_len/2)*tile_size]
 
-    return display_size, tile_size, horizontal_tile_len, vertical_tile_len, matrix, ant_position
+    return display_size, tile_size, horizontal_tile_len, vertical_tile_len, matrix, mario_position
