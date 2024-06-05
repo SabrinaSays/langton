@@ -46,7 +46,7 @@ def run():
 
             pg.display.update()
 
-            time.sleep(2)
+            time.sleep(1)
             first_run = False 
             continue
 
@@ -54,8 +54,7 @@ def run():
         draw_coins(matrix=matrix, screen=screen, coin_image=coin_image, tile_size=tile_size)
 
         # moves mario and saves the angle for the next time we move mario
-        mario_angle = move_mario(matrix=matrix, mario_position=mario_position, tile_size=tile_size, screen=screen, mario_image=mario_image, mario_angle=mario_angle)
-        
+        mario_angle = move_mario(matrix=matrix, mario_position=mario_position, tile_size=tile_size, screen=screen, mario_image=mario_image, mario_angle=mario_angle, display_size = display_size)
         pg.display.update()
 
         
@@ -69,8 +68,37 @@ def run():
     pg.quit()
 
 
-def move_mario(matrix, mario_position, tile_size, screen, mario_image, mario_angle):
+def move_mario(matrix, mario_position, tile_size, screen, mario_image, mario_angle, display_size):
     '''Mario goes left on when on a coin and right when he isnt on one. Since left and right are relative, we must save what direction Mario is facing.'''
+
+
+    # if mario reaches bounds of grid, wrap around to other side
+    if mario_position[0] >= display_size[0]:
+        mario_position[0] = tile_size
+
+        screen.blit(mario_image, mario_position)
+        return mario_angle
+    
+    elif mario_position[0] <= 0:
+        mario_position[0] = int(display_size[0]/tile_size)
+
+        screen.blit(mario_image, mario_position)
+        return mario_angle
+    
+    elif mario_position[1] >= display_size[1]:
+        mario_position[1] = tile_size
+
+        screen.blit(mario_image, mario_position)
+        return mario_angle
+    
+    elif mario_position[1] <= 0:
+        mario_position[1] = int(display_size[1]/tile_size)
+        
+        screen.blit(mario_image, mario_position)
+        return mario_angle
+    
+
+
     x_coord = int(mario_position[0]/tile_size)
     y_coord = int(mario_position[1]/tile_size)
 
@@ -99,8 +127,8 @@ def move_mario(matrix, mario_position, tile_size, screen, mario_image, mario_ang
     elif mario_angle == 270:
         mario_position[0] += tile_size
 
-    screen.blit(mario_image, mario_position)
 
+    screen.blit(mario_image, mario_position)
     return mario_angle
 
 def draw_grid_lines(display_size, tile_size, screen):
@@ -116,11 +144,15 @@ def update_matrix(matrix, prev_mario_position, tile_size):
     x_coord = int(prev_mario_position[0]/tile_size)
     y_coord = int(prev_mario_position[1]/tile_size)
 
-    if matrix[x_coord][y_coord] == 0:
-        matrix[x_coord][y_coord] = 1
+    try:
+        if matrix[x_coord][y_coord] == 0:
+            matrix[x_coord][y_coord] = 1
 
-    elif matrix[x_coord][y_coord] == 1:
-        matrix[x_coord][y_coord] = 0
+        elif matrix[x_coord][y_coord] == 1:
+            matrix[x_coord][y_coord] = 0
+    except IndexError:
+        # if there is an index error (mario wrapping around to other side), skip this update
+        pass
 
 def draw_coins(matrix, screen, coin_image, tile_size):
     '''populates grid with coin images'''

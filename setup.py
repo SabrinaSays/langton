@@ -12,7 +12,7 @@ def basic_info():
     - matrix creation
     - where mario starts
     '''
-    display_size = [1000,1000]
+    display_size = [200,200]
 
     #matrix/grid creation
     tile_size = 50
